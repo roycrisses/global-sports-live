@@ -30,23 +30,36 @@ const App: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      let url = `${BASE_URL}?category=${filter}&language=en&apiKey=${API_KEY}`;
+      let url = '';
+      // Determine the API endpoint and parameters based on search query or filter
       if (searchQuery) {
-        url = `${BASE_URL}?q=${searchQuery}&language=en&apiKey=${API_KEY}`;
+        // Use /everything endpoint for specific search queries across all news
+        url = `https://newsapi.org/v2/everything?q=${searchQuery}&language=en&sortBy=publishedAt&apiKey=${API_KEY}`;
+      } else if (filter && filter !== 'sports') {
+        // Use /everything endpoint for specific sport filters (e.g., Football, Cricket)
+        // NewsAPI's /top-headlines 'category' parameter is limited, so 'everything' with 'q' is better for specific sports
+        url = `https://newsapi.org/v2/everything?q=${filter}&language=en&sortBy=publishedAt&apiKey=${API_KEY}`;
+      } else {
+        // Default to top-headlines sports category when no specific search or sport filter is active
+        url = `${BASE_URL}?category=sports&language=en&apiKey=${API_KEY}`;
       }
 
       const response = await fetch(url);
+      // Check if the API response was successful
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      // Ensure articles exist and filter out any articles without an image
       if (data.articles) {
         setArticles(data.articles.filter((article: Article) => article.urlToImage));
       }
     } catch (e: any) {
+      // Catch and display any errors during the fetch operation
       setError(`Failed to fetch news: ${e.message}`);
       console.error(e);
     } finally {
+      // Set loading to false once the fetch operation is complete
       setLoading(false);
     }
   }, [filter, searchQuery, API_KEY]);
