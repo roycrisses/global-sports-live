@@ -17,13 +17,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         Trending Sports
       </h2>
       <nav aria-label="Sports categories">
-        <ul className="space-y-2" role="list">
+        <ul className="space-y-2">
           {categories.map((category) => {
             const filterValue = category.toLowerCase().replace(' ', '-');
             const isActive = activeFilter === filterValue;
             
             return (
-              <li key={category} role="listitem">
+              <li key={category}>
                 <button
                   onClick={() => onFilterChange(filterValue)}
                   className={`w-full text-left p-2 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${

@@ -48,7 +48,7 @@ export const useNews = (filter: string, searchQuery: string): UseNewsReturn => {
     } catch (err) {
       const newsError: NewsError = {
         message: err instanceof Error ? err.message : 'Failed to fetch news',
-        status: err instanceof Error && 'status' in err ? (err as any).status : undefined
+        status: err instanceof Error && 'status' in err ? (err as Error & { status?: number }).status : undefined
       };
       setError(newsError);
       console.error('News fetch error:', err);
