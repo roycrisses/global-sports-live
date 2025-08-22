@@ -30,24 +30,22 @@ const App: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      let url = '';
-      // Determine the API endpoint and parameters based on search query or filter
+      let apiUrl = '/.netlify/functions/news-proxy';
+      const params = new URLSearchParams();
+
       if (searchQuery) {
-        // Use /everything endpoint for specific search queries across all news
-        url = `https://newsapi.org/v2/everything?q=${searchQuery}&language=en&sortBy=publishedAt&apiKey=${API_KEY}`;
+        params.append('q', searchQuery);
       } else if (filter && filter !== 'sports') {
-        // Use /everything endpoint for specific sport filters (e.g., Football, Cricket)
-        // NewsAPI's /top-headlines 'category' parameter is limited, so 'everything' with 'q' is better for specific sports
-        url = `https://newsapi.org/v2/everything?q=${filter}&language=en&sortBy=publishedAt&apiKey=${API_KEY}`;
+        params.append('filter', filter);
       } else {
-        // Default to top-headlines sports category when no specific search or sport filter is active
-        url = `${BASE_URL}?category=sports&language=en&apiKey=${API_KEY}`;
+        params.append('filter', 'sports'); // Default to sports category
       }
 
-      const response = await fetch(url);
+      const response = await fetch(`${apiUrl}?${params.toString()}`);
       // Check if the API response was successful
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`HTTP error! status: ${response.status} - ${errorData.error || 'Unknown error'}`);
       }
       const data = await response.json();
       // Ensure articles exist and filter out any articles without an image
@@ -62,7 +60,7 @@ const App: React.FC = () => {
       // Set loading to false once the fetch operation is complete
       setLoading(false);
     }
-  }, [filter, searchQuery, API_KEY]);
+  }, [filter, searchQuery]);
 
   useEffect(() => {
     fetchNews();

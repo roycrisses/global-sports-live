@@ -1,0 +1,9 @@
+{
+  "name": "news-proxy-function",
+  "version": "1.0.0",
+  "description": "A Netlify function to proxy NewsAPI requests",
+  "main": "news-proxy.js",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
