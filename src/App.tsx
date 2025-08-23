@@ -86,7 +86,9 @@ const App: React.FC = () => {
                     <p className="text-blue-100 text-sm mb-4">
                       With new season on the way we are announcing contest for most active uploaders & users!
                     </p>
-                    <button className="bg-blue-400 hover:bg-blue-300 text-blue-900 px-4 py-2 rounded-lg font-medium transition-colors">
+                    <button 
+                      onClick={() => setActiveTab('news')}
+                      className="bg-blue-400 hover:bg-blue-300 text-blue-900 px-4 py-2 rounded-lg font-medium transition-colors">
                       Details
                     </button>
                   </div>
