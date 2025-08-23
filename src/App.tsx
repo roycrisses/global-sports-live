@@ -240,7 +240,7 @@ const App: React.FC = () => {
                 )}
 
                 {/* Cricket Section */}
-                {activeTab === 'cricket' && cricketMatches.length > 0 && (
+                {activeTab === 'cricket' && (
                   <div className="space-y-6">
                     <div className="flex items-center space-x-3">
                       <div className="w-6 h-6 text-blue-400">
@@ -259,16 +259,34 @@ const App: React.FC = () => {
                       <div className="flex-1 h-px bg-gradient-to-r from-blue-500/50 to-transparent"></div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {cricketMatches.map((match) => (
-                        <CricketCard key={match.id} match={match} />
-                      ))}
-                    </div>
+                    {cricketLoading ? (
+                      <div className="flex justify-center py-8">
+                        <LoadingSpinner />
+                      </div>
+                    ) : cricketError ? (
+                      <div className="text-center py-8">
+                        <p className="text-red-400">Error loading cricket matches: {cricketError}</p>
+                      </div>
+                    ) : cricketMatches.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {cricketMatches.map((match) => (
+                          <CricketCard key={match.id} match={match} />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-gray-400">
+                          {cricketUpcoming 
+                            ? 'No upcoming cricket matches available at the moment.'
+                            : 'No cricket matches available today. Check back later for live matches.'}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Tennis Section */}
-                {activeTab === 'tennis' && tennisMatches.length > 0 && (
+                {activeTab === 'tennis' && (
                   <div className="space-y-6">
                     <div className="flex items-center space-x-3">
                       <div className="w-6 h-6 text-green-400">
@@ -287,16 +305,34 @@ const App: React.FC = () => {
                       <div className="flex-1 h-px bg-gradient-to-r from-green-500/50 to-transparent"></div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {tennisMatches.map((match) => (
-                        <TennisCard key={match.id} match={match} />
-                      ))}
-                    </div>
+                    {tennisLoading ? (
+                      <div className="flex justify-center py-8">
+                        <LoadingSpinner />
+                      </div>
+                    ) : tennisError ? (
+                      <div className="text-center py-8">
+                        <p className="text-red-400">Error loading tennis matches: {tennisError}</p>
+                      </div>
+                    ) : tennisMatches.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {tennisMatches.map((match) => (
+                          <TennisCard key={match.id} match={match} />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-gray-400">
+                          {tennisUpcoming 
+                            ? 'No upcoming tennis matches available at the moment.'
+                            : 'No tennis matches available today. Check back later for live matches.'}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Basketball Section */}
-                {activeTab === 'basketball' && basketballGames.length > 0 && (
+                {activeTab === 'basketball' && (
                   <div className="space-y-6">
                     <div className="flex items-center space-x-3">
                       <div className="w-6 h-6 text-orange-400">
@@ -315,16 +351,34 @@ const App: React.FC = () => {
                       <div className="flex-1 h-px bg-gradient-to-r from-orange-500/50 to-transparent"></div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {basketballGames.map((game) => (
-                        <BasketballCard key={game.id} game={game} />
-                      ))}
-                    </div>
+                    {basketballLoading ? (
+                      <div className="flex justify-center py-8">
+                        <LoadingSpinner />
+                      </div>
+                    ) : basketballError ? (
+                      <div className="text-center py-8">
+                        <p className="text-red-400">Error loading basketball games: {basketballError}</p>
+                      </div>
+                    ) : basketballGames.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {basketballGames.map((game) => (
+                          <BasketballCard key={game.id} game={game} />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-gray-400">
+                          {basketballUpcoming 
+                            ? 'No upcoming basketball games available at the moment.'
+                            : 'No basketball games available today. Check back later for live games.'}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Fixtures Section */}
-                {activeTab === 'fixtures' && fixtures.length > 0 && (
+                {activeTab === 'fixtures' && (
                   <div className="space-y-6">
                     <div className="flex items-center space-x-3">
                       <div className="w-6 h-6 text-orange-400">
@@ -340,15 +394,33 @@ const App: React.FC = () => {
                       </h2>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {fixtures.map((fixture, index) => (
-                        <FixtureCard 
-                          key={fixture.fixture.id} 
-                          fixture={fixture}
-                          index={index}
-                        />
-                      ))}
-                    </div>
+                    {fixturesLoading ? (
+                      <div className="flex justify-center py-8">
+                        <LoadingSpinner />
+                      </div>
+                    ) : fixturesError ? (
+                      <div className="text-center py-8">
+                        <p className="text-red-400">Error loading football fixtures: {String(fixturesError)}</p>
+                      </div>
+                    ) : fixtures.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {fixtures.map((fixture, index) => (
+                          <FixtureCard 
+                            key={fixture.fixture.id} 
+                            fixture={fixture}
+                            index={index}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-gray-400">
+                          {fixturesUpcoming 
+                            ? 'No upcoming football fixtures available at the moment.'
+                            : 'No football fixtures available today. Check back later for live matches.'}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
