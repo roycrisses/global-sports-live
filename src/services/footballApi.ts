@@ -176,7 +176,9 @@ class FootballApiService {
   }
 
   async getLiveFixtures(): Promise<FootballFixture[]> {
-    return this.getFixtures(undefined, undefined, true);
+    // Get today's fixtures for live matches
+    const today = new Date().toISOString().split('T')[0];
+    return this.getFixtures(undefined, undefined, today);
   }
 
   async getTodayFixtures(): Promise<FootballFixture[]> {
