@@ -14,6 +14,7 @@ import { TennisCard } from './components/TennisCard';
 import { CricketCard } from './components/CricketCard';
 import { SearchBar } from './components/SearchBar';
 import { Sidebar } from './components/Sidebar';
+import { NewsCarousel } from './components/NewsCarousel';
 
 const App: React.FC = () => {
   const [filter, setFilter] = useState<string>('sports');
@@ -40,7 +41,7 @@ const App: React.FC = () => {
       setActiveTab('tennis');
     } else if (newFilter === 'Cricket') {
       setActiveTab('cricket');
-    } else if (newFilter === 'sports' || newFilter === 'recent') {
+    } else if (newFilter === 'sports' || newFilter === 'recent' || newFilter === 'live') {
       setActiveTab('news');
     }
   };
@@ -88,29 +89,9 @@ const App: React.FC = () => {
               </button>
             </header>
 
-            {/* Hero Banner */}
+            {/* News Carousel */}
             <div className="p-6">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-800 dark:to-blue-700 rounded-2xl p-8 mb-8 relative overflow-hidden">
-                <div className="relative z-10">
-                  <h2 className="text-4xl font-bold mb-2">Champions League is here!</h2>
-                  <p className="text-blue-100 mb-6">Clips will be waiting for you at saturday!</p>
-                  
-                  <div className="bg-blue-500/30 backdrop-blur-sm rounded-xl p-6 max-w-md">
-                    <h3 className="text-xl font-bold mb-2">Sharing Clips Contest!</h3>
-                    <p className="text-blue-100 text-sm mb-4">
-                      With new season on the way we are announcing contest for most active uploaders & users!
-                    </p>
-                    <button 
-                      onClick={() => setActiveTab('news')}
-                      className="bg-blue-400 hover:bg-blue-300 text-blue-900 px-4 py-2 rounded-lg font-medium transition-colors">
-                      Details
-                    </button>
-                  </div>
-                </div>
-                
-                {/* Player image placeholder */}
-                <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-blue-400/20 to-transparent"></div>
-              </div>
+              <NewsCarousel />
 
               {/* Search Bar */}
               <div className="mb-8">
