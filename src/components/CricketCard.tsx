@@ -1,176 +1,142 @@
 import React from 'react';
+import { formatDistanceToNow } from 'date-fns';
 import { CricketMatch } from '../types/cricket';
 
 interface CricketCardProps {
   match: CricketMatch;
+  index?: number;
 }
 
-export const CricketCard: React.FC<CricketCardProps> = ({ match }) => {
-  const isLive = match.status === 'LIVE' || match.state === 'In Progress';
-  const isFinished = match.status === 'COMPLETE' || match.state === 'Complete';
-  const isUpcoming = match.status === 'UPCOMING' || match.state === 'Preview';
-
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch {
-      return dateString;
-    }
-  };
+export const CricketCard: React.FC<CricketCardProps> = ({ match, index = 0 }) => {
+  const isLive = match.status === 'live';
+  const isFinished = match.status === 'finished';
+  const isUpcoming = match.status === 'upcoming';
 
   const getStatusDisplay = () => {
     if (isLive) {
-      return (
-        <div className="flex items-center space-x-1">
-          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-400 font-medium text-xs">LIVE</span>
-        </div>
-      );
+      return {
+        text: 'LIVE',
+        bgColor: 'bg-red-500',
+        textColor: 'text-white',
+        showPulse: true
+      };
+    } else if (isFinished) {
+      return {
+        text: 'FINISHED',
+        bgColor: 'bg-gray-500',
+        textColor: 'text-white',
+        showPulse: false
+      };
+    } else if (isUpcoming) {
+      const matchTime = new Date(match.startDate);
+      return {
+        text: matchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        bgColor: 'bg-blue-500',
+        textColor: 'text-white',
+        showPulse: false
+      };
     }
-    if (isFinished) {
-      return <span className="text-gray-400 text-xs font-medium">FINISHED</span>;
-    }
-    if (isUpcoming) {
-      return <span className="text-blue-400 text-xs font-medium">{formatDate(match.startDate)}</span>;
-    }
-    return <span className="text-gray-400 text-xs font-medium">{match.status}</span>;
+    return {
+      text: match.status.toUpperCase(),
+      bgColor: 'bg-gray-400',
+      textColor: 'text-white',
+      showPulse: false
+    };
   };
 
-  const getTeamDisplay = (teamKey: 'team1' | 'team2') => {
-    const team = match.teams[teamKey];
-    const teamScore = match.scores?.[teamKey];
-    const isWinner = match.result?.winner?.id === team.id;
-    
-    return (
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            {team.flag && (
-              <span className="text-lg">{team.flag}</span>
-            )}
-            <div>
-              <h3 className={`font-semibold text-sm ${
-                isWinner ? 'text-green-400' : 'text-white'
-              }`}>
-                {team.shortName || team.name}
-              </h3>
-              <p className="text-gray-400 text-xs">
-                {team.country}
+  const status = getStatusDisplay();
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-200">
+      {/* Tournament Header */}
+      <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600">
+        <div className="flex items-center space-x-2">
+          <div className="w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
+            <svg className="w-3 h-3 text-green-800" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+            {match.series?.name || 'Cricket Match'}
+          </span>
+        </div>
+        
+        <div className={`${status.bgColor} ${status.textColor} px-3 py-1 rounded-full text-xs font-semibold flex items-center space-x-1`}>
+          {status.showPulse && (
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+          )}
+          <span>{status.text}</span>
+        </div>
+      </div>
+
+      {/* Match Content */}
+      <div className="p-6">
+        {/* Teams and Score */}
+        <div className="flex items-center justify-between mb-4">
+          {/* Team 1 */}
+          <div className="flex items-center space-x-3 flex-1">
+            <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
+              <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                {match.teams.team1.name.substring(0, 3).toUpperCase()}
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-900 dark:text-white truncate">
+                {match.teams.team1.name}
               </p>
             </div>
           </div>
-        </div>
-        
-        {/* Score Display */}
-        {teamScore && (isLive || isFinished) && (
-          <div className="text-right">
-            <div className={`text-lg font-bold ${
-              isWinner ? 'text-green-400' : 'text-white'
-            }`}>
-              {teamScore.innings1 && (
-                <span>
-                  {teamScore.innings1.runs}/{teamScore.innings1.wickets}
-                  <span className="text-sm text-gray-400 ml-1">
-                    ({teamScore.innings1.overs})
-                  </span>
-                </span>
-              )}
-            </div>
-            {teamScore.innings2 && (
-              <div className={`text-sm ${
-                isWinner ? 'text-green-300' : 'text-gray-300'
-              }`}>
-                {teamScore.innings2.runs}/{teamScore.innings2.wickets}
-                <span className="text-xs text-gray-400 ml-1">
-                  ({teamScore.innings2.overs})
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
 
-  const getMatchFormatColor = (format: string) => {
-    switch (format.toLowerCase()) {
-      case 'test':
-        return 'text-red-400';
-      case 'odi':
-        return 'text-blue-400';
-      case 't20':
-      case 't20i':
-        return 'text-green-400';
-      case 'ipl':
-        return 'text-orange-400';
-      default:
-        return 'text-gray-400';
-    }
-  };
-
-  return (
-    <article className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 border border-gray-700/50">
-      <div className="p-6">
-        {/* Header with Series and Status */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2">
-            <div>
-              <h4 className="text-gray-300 text-sm font-medium">
-                {match.series.name}
-              </h4>
-              <div className="flex items-center space-x-2 text-xs text-gray-400">
-                <span className={getMatchFormatColor(match.matchFormat)}>
-                  {match.matchFormat.toUpperCase()}
-                </span>
-                <span>•</span>
-                <span>{match.series.category}</span>
+          {/* Score */}
+          <div className="flex items-center space-x-4 mx-6">
+            <div className="text-center">
+              <div className="text-lg font-bold text-gray-900 dark:text-white">
+                {match.scores?.team1?.innings1?.runs || 'TBD'}
               </div>
             </div>
-          </div>
-          {getStatusDisplay()}
-        </div>
-
-        {/* Teams and Scores */}
-        <div className="space-y-4">
-          {/* Team 1 */}
-          {getTeamDisplay('team1')}
-
-          {/* VS Divider */}
-          <div className="flex items-center justify-center">
-            <div className="w-full h-px bg-gray-700"></div>
-            <span className="px-3 text-gray-500 text-xs font-medium bg-gray-800/50">VS</span>
-            <div className="w-full h-px bg-gray-700"></div>
+            <div className="text-gray-400 font-medium">-</div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-gray-900 dark:text-white">
+                {match.scores?.team2?.innings1?.runs || 'TBD'}
+              </div>
+            </div>
           </div>
 
           {/* Team 2 */}
-          {getTeamDisplay('team2')}
-        </div>
-
-        {/* Match Result */}
-        {match.result && isFinished && (
-          <div className="mt-4 pt-4 border-t border-gray-700/50">
-            <div className="text-center">
-              <p className="text-green-400 text-sm font-medium">
-                {match.result.resultText}
+          <div className="flex items-center space-x-3 flex-1 justify-end">
+            <div className="flex-1 min-w-0 text-right">
+              <p className="font-semibold text-gray-900 dark:text-white truncate">
+                {match.teams.team2.name}
               </p>
             </div>
+            <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
+              <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                {match.teams.team2.name.substring(0, 3).toUpperCase()}
+              </span>
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Venue Information */}
-        <div className="mt-4 pt-4 border-t border-gray-700/50">
-          <div className="flex items-center justify-between text-xs text-gray-400">
-            <span>{match.venue.name}</span>
-            <span>{match.venue.city}, {match.venue.country}</span>
+        {/* Match Info */}
+        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+          <div className="flex items-center space-x-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>{match.venue?.name || 'Venue TBD'}</span>
+          </div>
+          
+          <div className="flex items-center space-x-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>
+              {formatDistanceToNow(new Date(match.startDate), { addSuffix: true })}
+            </span>
           </div>
         </div>
       </div>
-    </article>
+    </div>
   );
 };

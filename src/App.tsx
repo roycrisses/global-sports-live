@@ -56,7 +56,7 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white dark:text-gray-100">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         <div className="flex h-screen">
           <Sidebar
             categories={sportsCategories}
@@ -64,23 +64,24 @@ const App: React.FC = () => {
             onFilterChange={handleFilterChange}
           />
 
-          <main className="flex-1 overflow-y-auto">
+          <main className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
             {/* Header */}
-            <header className="flex items-center justify-between p-6 border-b border-gray-700/50 dark:border-gray-600/50">
+            <header className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
               <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold">SportMoment</h1>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Global Sports Live</h1>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Live scores & upcoming matches</p>
                 </div>
               </div>
               
               <button
                 onClick={toggleDarkMode}
-                className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50 transition-colors duration-200"
+                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200"
                 aria-label="Toggle theme"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +91,7 @@ const App: React.FC = () => {
             </header>
 
             {/* News Carousel */}
-            <div className="p-6">
+            <div className="p-6 bg-gray-50 dark:bg-gray-900">
               <NewsCarousel />
 
               {/* Search Bar */}
@@ -102,57 +103,69 @@ const App: React.FC = () => {
                 />
               </div>
 
+              {/* Live & Upcoming Status */}
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Live</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Upcoming</span>
+                </div>
+              </div>
+
               {/* Tab Navigation */}
-              <div className="flex space-x-1 bg-gray-800/50 dark:bg-gray-700/50 rounded-lg p-1">
+              <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1 mb-8">
                 <button
                   onClick={() => setActiveTab('fixtures')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     activeTab === 'fixtures'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
-                  Football
+                  ⚽ Football
                 </button>
                 <button
                   onClick={() => setActiveTab('basketball')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     activeTab === 'basketball'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
-                  Basketball
+                  🏀 Basketball
                 </button>
                 <button
                   onClick={() => setActiveTab('tennis')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     activeTab === 'tennis'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
-                  Tennis
+                  🎾 Tennis
                 </button>
                 <button
                   onClick={() => setActiveTab('cricket')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     activeTab === 'cricket'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
-                  Cricket
+                  🏏 Cricket
                 </button>
                 <button
                   onClick={() => setActiveTab('news')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     activeTab === 'news'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
-                  Sports News
+                  📰 News
                 </button>
               </div>
 
