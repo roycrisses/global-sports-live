@@ -4,7 +4,7 @@ class CricketApiService {
   private baseUrl = `https://${process.env.REACT_APP_CRICKET_API_HOST}`;
   private apiKey = process.env.REACT_APP_CRICKET_API_KEY;
 
-  private async makeRequest(endpoint: string): Promise<{ response: unknown[] }> {
+  private async makeRequest(endpoint: string): Promise<any> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method: 'GET',
@@ -52,19 +52,19 @@ class CricketApiService {
   async getSeries(): Promise<CricketSeries[]> {
     const endpoint = '/series';
     const data = await this.makeRequest(endpoint);
-    return (data.seriesMapProto || []) as CricketSeries[];
+    return (data.response || data.seriesMapProto || []) as CricketSeries[];
   }
 
   async getMatchDetails(matchId: number): Promise<CricketMatch> {
     const endpoint = `/matches/${matchId}`;
     const data = await this.makeRequest(endpoint);
-    return (data.matchDetails || {}) as CricketMatch;
+    return (data.response?.[0] || data.matchDetails || {}) as CricketMatch;
   }
 
   async getLiveScore(matchId: number): Promise<CricketLiveScore> {
     const endpoint = `/matches/${matchId}/live`;
     const data = await this.makeRequest(endpoint);
-    return (data.liveScore || {}) as CricketLiveScore;
+    return (data.response?.[0] || data.liveScore || {}) as CricketLiveScore;
   }
 
   async getTodayMatches(): Promise<CricketMatch[]> {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { footballApi, FootballFixture, FootballLeague } from '../services/footballApi';
+import { FootballFixture, FootballLeague } from '../types/football';
+import { footballApi } from '../services/footballApi';
 
 export const useFootballFixtures = (league?: number, live: boolean = false) => {
   const [fixtures, setFixtures] = useState<FootballFixture[]>([]);

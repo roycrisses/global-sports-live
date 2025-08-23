@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { FootballFixture } from '../services/footballApi';
+import { FootballFixture } from '../types/football';
 
 interface FixtureCardProps {
   fixture: FootballFixture;
