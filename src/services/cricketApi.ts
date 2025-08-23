@@ -4,27 +4,37 @@ class CricketApiService {
   private baseUrl = `https://${process.env.REACT_APP_CRICKET_API_HOST}`;
   private apiKey = process.env.REACT_APP_CRICKET_API_KEY;
 
-  private async makeRequest(endpoint: string): Promise<{ response?: unknown; typeMatches?: unknown[]; seriesMapProto?: unknown[]; matchDetails?: unknown; liveScore?: unknown }> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': this.apiKey || '',
-        'X-RapidAPI-Host': process.env.REACT_APP_CRICKET_API_HOST || '',
-      },
-    });
+  private async makeRequest(endpoint: string): Promise<{ response: unknown[] }> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'GET',
+        headers: {
+          'X-RapidAPI-Key': this.apiKey || '',
+          'X-RapidAPI-Host': process.env.REACT_APP_CRICKET_API_HOST || '',
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Cricket API error: ${response.status}`);
+      if (response.status === 429) {
+        console.warn('Cricket API rate limit exceeded. Using cached data or empty response.');
+        return { response: [] };
+      }
+
+      if (!response.ok) {
+        throw new Error(`Cricket API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Cricket API request failed:', error);
+      return { response: [] };
     }
-
-    const data = await response.json();
-    return data;
   }
 
   async getMatches(matchType: 'live' | 'recent' | 'upcoming' = 'live'): Promise<CricketMatch[]> {
     const endpoint = `/matches/${matchType}`;
     const data = await this.makeRequest(endpoint);
-    return (data.typeMatches || []) as CricketMatch[];
+    return (data.response || []) as CricketMatch[];
   }
 
   async getLiveMatches(): Promise<CricketMatch[]> {

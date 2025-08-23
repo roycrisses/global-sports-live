@@ -92,20 +92,30 @@ class FootballApiService {
   private apiKey = process.env.REACT_APP_FOOTBALL_API_KEY;
 
   private async makeRequest(endpoint: string): Promise<{ response: unknown[] }> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': this.apiKey || '',
-        'X-RapidAPI-Host': process.env.REACT_APP_FOOTBALL_API_HOST || '',
-      },
-    });
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'GET',
+        headers: {
+          'X-RapidAPI-Key': this.apiKey || '',
+          'X-RapidAPI-Host': process.env.REACT_APP_FOOTBALL_API_HOST || '',
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Football API error: ${response.status}`);
+      if (response.status === 429) {
+        console.warn('Football API rate limit exceeded. Using cached data or empty response.');
+        return { response: [] };
+      }
+
+      if (!response.ok) {
+        throw new Error(`Football API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Football API request failed:', error);
+      return { response: [] };
     }
-
-    const data = await response.json();
-    return data;
   }
 
   async getFixtures(league?: number, season?: number, date?: string): Promise<FootballFixture[]> {
