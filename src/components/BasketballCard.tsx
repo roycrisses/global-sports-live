@@ -7,7 +7,7 @@ interface BasketballCardProps {
   index?: number;
 }
 
-export const BasketballCard: React.FC<BasketballCardProps> = ({ game, index = 0 }) => {
+export const BasketballCard: React.FC<BasketballCardProps> = ({ game }) => {
   const isLive = game.status.short === '1' || game.status.short === '2' || game.status.short === '3' || game.status.short === '4' || game.status.short === 'OT';
   const isFinished = game.status.short === 'FT';
   const isUpcoming = game.status.short === 'NS';

@@ -7,7 +7,7 @@ interface FixtureCardProps {
   index?: number;
 }
 
-export const FixtureCard: React.FC<FixtureCardProps> = ({ fixture, index = 0 }) => {
+export const FixtureCard: React.FC<FixtureCardProps> = ({ fixture }) => {
   const isLive = fixture.fixture.status.short === '1H' || fixture.fixture.status.short === '2H' || fixture.fixture.status.short === 'HT';
   const isFinished = fixture.fixture.status.short === 'FT';
   const isUpcoming = fixture.fixture.status.short === 'NS';

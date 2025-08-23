@@ -1,13 +1,11 @@
 import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
 import { TennisMatch } from '../types/tennis';
 
 interface TennisCardProps {
   match: TennisMatch;
-  index?: number;
 }
 
-export const TennisCard: React.FC<TennisCardProps> = ({ match, index = 0 }) => {
+export const TennisCard: React.FC<TennisCardProps> = ({ match }) => {
   const isLive = match.status.code === 'LIVE' || 
                  match.status.code === 'IN_PROGRESS' ||
                  match.status.type === 'inprogress';
@@ -66,70 +64,6 @@ export const TennisCard: React.FC<TennisCardProps> = ({ match, index = 0 }) => {
     };
   };
 
-  const getPlayerDisplay = (playerKey: 'player1' | 'player2') => {
-    const player = match.players[playerKey];
-    const isWinner = match.winner?.id === player.id;
-    
-    return (
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            {player.country?.flag && (
-              <span className="text-lg">{player.country.flag}</span>
-            )}
-            <div>
-              <h3 className={`font-semibold text-sm ${
-                isWinner ? 'text-green-400' : 'text-white'
-              }`}>
-                {player.shortName || player.name}
-              </h3>
-              <div className="flex items-center space-x-2 text-xs text-gray-400">
-                {player.ranking && (
-                  <span>#{player.ranking}</span>
-                )}
-                {player.seed && (
-                  <span>({player.seed})</span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Sets Score */}
-        {match.score && (
-          <div className="flex items-center space-x-2">
-            {match.score.sets.map((set, index) => (
-              <div key={index} className={`text-sm font-medium ${
-                isWinner ? 'text-green-400' : 'text-white'
-              }`}>
-                {set[playerKey]}
-              </div>
-            ))}
-            {match.score.currentSet && (isLive) && (
-              <div className={`text-sm font-bold ${
-                isWinner ? 'text-green-400' : 'text-white'
-              } bg-gray-700 px-2 py-1 rounded`}>
-                {match.score.currentSet[playerKey]}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const getSurfaceColor = (surface: string) => {
-    switch (surface.toLowerCase()) {
-      case 'clay':
-        return 'text-orange-400';
-      case 'grass':
-        return 'text-green-400';
-      case 'hard':
-        return 'text-blue-400';
-      default:
-        return 'text-gray-400';
-    }
-  };
 
   const status = getStatusDisplay();
 

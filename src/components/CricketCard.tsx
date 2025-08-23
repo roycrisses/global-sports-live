@@ -7,7 +7,7 @@ interface CricketCardProps {
   index?: number;
 }
 
-export const CricketCard: React.FC<CricketCardProps> = ({ match, index = 0 }) => {
+export const CricketCard: React.FC<CricketCardProps> = ({ match }) => {
   const isLive = match.status === 'live';
   const isFinished = match.status === 'finished';
   const isUpcoming = match.status === 'upcoming';
