@@ -1,5 +1,4 @@
 import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
 import { BasketballGame } from '../types/basketball';
 
 interface BasketballCardProps {
@@ -142,7 +141,7 @@ export const BasketballCard: React.FC<BasketballCardProps> = ({ game }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>
-              {formatDistanceToNow(new Date(game.date), { addSuffix: true })}
+              {new Date(game.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
         </div>
