@@ -4,7 +4,7 @@ class CricketApiService {
   private baseUrl = `https://${process.env.REACT_APP_CRICKET_API_HOST}`;
   private apiKey = process.env.REACT_APP_CRICKET_API_KEY;
 
-  private async makeRequest(endpoint: string): Promise<any> {
+  private async makeRequest(endpoint: string): Promise<{ response?: unknown[]; seriesMapProto?: unknown[]; matchDetails?: unknown; liveScore?: unknown }> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method: 'GET',
