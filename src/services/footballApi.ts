@@ -107,6 +107,26 @@ class FootballApiService {
   async getTodayFixtures(): Promise<FootballFixture[]> {
     return this.getFixtures();
   }
+
+  async getUpcomingFixtures(days: number = 7): Promise<FootballFixture[]> {
+    const fixtures: FootballFixture[] = [];
+    const today = new Date();
+    
+    for (let i = 1; i <= days; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i);
+      const dateString = futureDate.toISOString().split('T')[0];
+      
+      try {
+        const dayFixtures = await this.getFixtures(undefined, undefined, dateString);
+        fixtures.push(...dayFixtures);
+      } catch (error) {
+        console.error(`Error fetching fixtures for ${dateString}:`, error);
+      }
+    }
+    
+    return fixtures;
+  }
 }
 
 export const footballApi = new FootballApiService();

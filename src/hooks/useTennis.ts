@@ -6,13 +6,23 @@ export const useTennisMatches = () => {
   const [matches, setMatches] = useState<TennisMatch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUpcoming, setIsUpcoming] = useState(false);
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await tennisApiService.getTodayMatches();
+        setIsUpcoming(false);
+        
+        let data = await tennisApiService.getTodayMatches();
+        
+        // If no matches for today, fetch upcoming matches
+        if (data.length === 0) {
+          data = await tennisApiService.getUpcomingMatches(7);
+          setIsUpcoming(true);
+        }
+        
         setMatches(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch tennis matches');
@@ -25,7 +35,7 @@ export const useTennisMatches = () => {
     fetchMatches();
   }, []);
 
-  return { matches, loading, error };
+  return { matches, loading, error, isUpcoming };
 };
 
 export const useTennisTournaments = () => {
@@ -58,13 +68,27 @@ export const useATPMatches = () => {
   const [matches, setMatches] = useState<TennisMatch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUpcoming, setIsUpcoming] = useState(false);
 
   useEffect(() => {
     const fetchATPMatches = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await tennisApiService.getATPMatches();
+        setIsUpcoming(false);
+        
+        let data = await tennisApiService.getATPMatches();
+        
+        // If no ATP matches for today, fetch upcoming ATP matches
+        if (data.length === 0) {
+          const upcomingMatches = await tennisApiService.getUpcomingMatches(7);
+          data = upcomingMatches.filter(match => 
+            match.tournament.category.toLowerCase().includes('atp') ||
+            match.tournament.name.toLowerCase().includes('atp')
+          );
+          setIsUpcoming(true);
+        }
+        
         setMatches(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch ATP matches');
@@ -77,20 +101,34 @@ export const useATPMatches = () => {
     fetchATPMatches();
   }, []);
 
-  return { matches, loading, error };
+  return { matches, loading, error, isUpcoming };
 };
 
 export const useWTAMatches = () => {
   const [matches, setMatches] = useState<TennisMatch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUpcoming, setIsUpcoming] = useState(false);
 
   useEffect(() => {
     const fetchWTAMatches = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await tennisApiService.getWTAMatches();
+        setIsUpcoming(false);
+        
+        let data = await tennisApiService.getWTAMatches();
+        
+        // If no WTA matches for today, fetch upcoming WTA matches
+        if (data.length === 0) {
+          const upcomingMatches = await tennisApiService.getUpcomingMatches(7);
+          data = upcomingMatches.filter(match => 
+            match.tournament.category.toLowerCase().includes('wta') ||
+            match.tournament.name.toLowerCase().includes('wta')
+          );
+          setIsUpcoming(true);
+        }
+        
         setMatches(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch WTA matches');
@@ -103,5 +141,5 @@ export const useWTAMatches = () => {
     fetchWTAMatches();
   }, []);
 
-  return { matches, loading, error };
+  return { matches, loading, error, isUpcoming };
 };

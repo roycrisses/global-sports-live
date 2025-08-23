@@ -118,6 +118,26 @@ class BasketballApiService {
       game.status.short === 'OT'
     );
   }
+
+  async getUpcomingGames(days: number = 7): Promise<BasketballGame[]> {
+    const games: BasketballGame[] = [];
+    const today = new Date();
+    
+    for (let i = 1; i <= days; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i);
+      const dateString = futureDate.toISOString().split('T')[0];
+      
+      try {
+        const dayGames = await this.getGames(undefined, undefined, dateString);
+        games.push(...dayGames);
+      } catch (error) {
+        console.error(`Error fetching games for ${dateString}:`, error);
+      }
+    }
+    
+    return games;
+  }
 }
 
 export const basketballApiService = new BasketballApiService();

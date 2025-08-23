@@ -113,6 +113,26 @@ class TennisApiService {
       return [];
     }
   }
+
+  async getUpcomingMatches(days: number = 7): Promise<TennisMatch[]> {
+    const matches: TennisMatch[] = [];
+    const today = new Date();
+    
+    for (let i = 1; i <= days; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i);
+      const dateString = futureDate.toISOString().split('T')[0];
+      
+      try {
+        const dayMatches = await this.getMatches(dateString);
+        matches.push(...dayMatches);
+      } catch (error) {
+        console.error(`Error fetching matches for ${dateString}:`, error);
+      }
+    }
+    
+    return matches;
+  }
 }
 
 export const tennisApiService = new TennisApiService();

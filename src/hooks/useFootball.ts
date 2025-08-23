@@ -6,12 +6,14 @@ export const useFootballFixtures = (league?: number, live: boolean = false) => {
   const [fixtures, setFixtures] = useState<FootballFixture[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [isUpcoming, setIsUpcoming] = useState(false);
 
   useEffect(() => {
     const fetchFixtures = async () => {
       try {
         setLoading(true);
         setError(null);
+        setIsUpcoming(false);
         
         let data: FootballFixture[];
         if (live) {
@@ -23,6 +25,17 @@ export const useFootballFixtures = (league?: number, live: boolean = false) => {
         // Filter by league if specified
         if (league) {
           data = data.filter(fixture => fixture.league.id === league);
+        }
+        
+        // If no fixtures for today, fetch upcoming fixtures
+        if (data.length === 0 && !live) {
+          const upcomingData = await footballApi.getUpcomingFixtures(7);
+          if (league) {
+            data = upcomingData.filter(fixture => fixture.league.id === league);
+          } else {
+            data = upcomingData;
+          }
+          setIsUpcoming(true);
         }
         
         setFixtures(data);
@@ -37,7 +50,7 @@ export const useFootballFixtures = (league?: number, live: boolean = false) => {
     fetchFixtures();
   }, [league, live]);
 
-  return { fixtures, loading, error };
+  return { fixtures, loading, error, isUpcoming };
 };
 
 export const useFootballLeagues = () => {

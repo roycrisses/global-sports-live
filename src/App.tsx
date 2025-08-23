@@ -21,10 +21,10 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'fixtures' | 'basketball' | 'tennis' | 'cricket' | 'news'>('fixtures');
   
   const { articles, loading: newsLoading, error: newsError } = useNews(filter, searchQuery);
-  const { fixtures, loading: fixturesLoading, error: fixturesError } = useFootballFixtures();
-  const { games: basketballGames, loading: basketballLoading, error: basketballError } = useBasketballGames();
-  const { matches: tennisMatches, loading: tennisLoading, error: tennisError } = useTennisMatches();
-  const { matches: cricketMatches, loading: cricketLoading, error: cricketError } = useCricketMatches();
+  const { fixtures, loading: fixturesLoading, error: fixturesError, isUpcoming: fixturesUpcoming } = useFootballFixtures();
+  const { games: basketballGames, loading: basketballLoading, error: basketballError, isUpcoming: basketballUpcoming } = useBasketballGames();
+  const { matches: tennisMatches, loading: tennisLoading, error: tennisError, isUpcoming: tennisUpcoming } = useTennisMatches();
+  const { matches: cricketMatches, loading: cricketLoading, error: cricketError, isUpcoming: cricketUpcoming } = useCricketMatches();
   const { toggleDarkMode } = useDarkMode();
 
   const handleFilterChange = (newFilter: string) => {
@@ -217,10 +217,10 @@ const App: React.FC = () => {
 
                 {/* Empty States */}
                 {!fixturesLoading && !basketballLoading && !tennisLoading && !cricketLoading && !newsLoading && !fixturesError && !basketballError && !tennisError && !cricketError && !newsError && 
-                 ((activeTab === 'fixtures' && fixtures.length === 0) || 
-                  (activeTab === 'basketball' && basketballGames.length === 0) || 
-                  (activeTab === 'tennis' && tennisMatches.length === 0) ||
-                  (activeTab === 'cricket' && cricketMatches.length === 0) ||
+                 ((activeTab === 'fixtures' && fixtures.length === 0 && !fixturesUpcoming) || 
+                  (activeTab === 'basketball' && basketballGames.length === 0 && !basketballUpcoming) || 
+                  (activeTab === 'tennis' && tennisMatches.length === 0 && !tennisUpcoming) ||
+                  (activeTab === 'cricket' && cricketMatches.length === 0 && !cricketUpcoming) ||
                   (activeTab === 'news' && articles.length === 0)) && (
                   <div className="text-center py-16">
                     <div className="w-24 h-24 mx-auto mb-6 bg-gray-800/50 rounded-2xl flex items-center justify-center">
@@ -229,21 +229,29 @@ const App: React.FC = () => {
                       </svg>
                     </div>
                     <h3 className="text-xl font-semibold mb-2">
-                      {activeTab === 'fixtures' ? 'No fixtures found' : 
-                       activeTab === 'basketball' ? 'No games found' : 
-                       activeTab === 'tennis' ? 'No matches found' :
-                       activeTab === 'cricket' ? 'No matches found' :
+                      {activeTab === 'fixtures' ? (fixturesUpcoming ? 'Upcoming Football Fixtures' : 'No fixtures found') : 
+                       activeTab === 'basketball' ? (basketballUpcoming ? 'Upcoming Basketball Games' : 'No games found') : 
+                       activeTab === 'tennis' ? (tennisUpcoming ? 'Upcoming Tennis Matches' : 'No matches found') :
+                       activeTab === 'cricket' ? (cricketUpcoming ? 'Upcoming Cricket Matches' : 'No matches found') :
                        'No articles found'}
                     </h3>
                     <p className="text-gray-400 max-w-md mx-auto">
                       {activeTab === 'fixtures' 
-                        ? 'No football fixtures available at the moment. Check back later for live matches and upcoming games.'
+                        ? (fixturesUpcoming 
+                          ? 'No live matches today, but here are the upcoming football fixtures in the next 7 days.'
+                          : 'No football fixtures available at the moment. Check back later for live matches and upcoming games.')
                         : activeTab === 'basketball'
-                        ? 'No basketball games available at the moment. Check back later for NBA and other league games.'
+                        ? (basketballUpcoming 
+                          ? 'No games today, but here are the upcoming basketball games in the next 7 days.'
+                          : 'No basketball games available at the moment. Check back later for NBA and other league games.')
                         : activeTab === 'tennis'
-                        ? 'No tennis matches available at the moment. Check back later for ATP, WTA, and Grand Slam matches.'
+                        ? (tennisUpcoming 
+                          ? 'No matches today, but here are the upcoming tennis matches in the next 7 days.'
+                          : 'No tennis matches available at the moment. Check back later for ATP, WTA, and Grand Slam matches.')
                         : activeTab === 'cricket'
-                        ? 'No cricket matches available at the moment. Check back later for IPL, international, and domestic matches.'
+                        ? (cricketUpcoming 
+                          ? 'No matches today, but here are the upcoming cricket matches.'
+                          : 'No cricket matches available at the moment. Check back later for IPL, international, and domestic matches.')
                         : 'No sports articles match your current search. Try adjusting your filters or search terms.'
                       }
                     </p>
@@ -259,7 +267,14 @@ const App: React.FC = () => {
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM8.5 16L12 13.5 15.5 16 12 18.5 8.5 16z"/>
                         </svg>
                       </div>
-                      <h2 className="text-2xl font-bold">Cricket Matches</h2>
+                      <h2 className="text-2xl font-bold">
+                        Cricket Matches
+                        {cricketUpcoming && (
+                          <span className="ml-2 text-sm font-normal text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full">
+                            Upcoming
+                          </span>
+                        )}
+                      </h2>
                       <div className="flex-1 h-px bg-gradient-to-r from-blue-500/50 to-transparent"></div>
                     </div>
                     
@@ -280,7 +295,14 @@ const App: React.FC = () => {
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                       </div>
-                      <h2 className="text-2xl font-bold">Tennis Matches</h2>
+                      <h2 className="text-2xl font-bold">
+                        Tennis Matches
+                        {tennisUpcoming && (
+                          <span className="ml-2 text-sm font-normal text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
+                            Upcoming
+                          </span>
+                        )}
+                      </h2>
                       <div className="flex-1 h-px bg-gradient-to-r from-green-500/50 to-transparent"></div>
                     </div>
                     
@@ -301,7 +323,14 @@ const App: React.FC = () => {
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                         </svg>
                       </div>
-                      <h2 className="text-2xl font-bold">Basketball Games</h2>
+                      <h2 className="text-2xl font-bold">
+                        Basketball Games
+                        {basketballUpcoming && (
+                          <span className="ml-2 text-sm font-normal text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full">
+                            Upcoming
+                          </span>
+                        )}
+                      </h2>
                       <div className="flex-1 h-px bg-gradient-to-r from-orange-500/50 to-transparent"></div>
                     </div>
                     
@@ -320,7 +349,14 @@ const App: React.FC = () => {
                       <div className="w-6 h-6 text-orange-400">
                         🔥
                       </div>
-                      <h2 className="text-2xl font-bold">Live Football Matches</h2>
+                      <h2 className="text-2xl font-bold">
+                        {fixturesUpcoming ? 'Upcoming Football Fixtures' : 'Live Football Matches'}
+                        {fixturesUpcoming && (
+                          <span className="ml-2 text-sm font-normal text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full">
+                            Upcoming
+                          </span>
+                        )}
+                      </h2>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
