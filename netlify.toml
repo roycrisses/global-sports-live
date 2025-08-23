@@ -1,7 +1,7 @@
 [build]
   command = "npm run build"
   publish = "build"
-  environment = { SECRETS_SCAN_ENABLED = "false" }
+  environment = { NODE_VERSION = "18.20.4", SECRETS_SCAN_ENABLED = "false" }
 
 [functions]
   directory = "netlify/functions" # Specify the directory where your Netlify Functions are located
