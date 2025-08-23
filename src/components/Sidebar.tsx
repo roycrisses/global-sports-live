@@ -12,10 +12,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onFilterChange
 }) => {
   return (
-    <aside className="w-80 bg-gray-900/95 backdrop-blur-sm h-screen p-6 border-r border-gray-700/50">
+    <aside className="w-80 bg-gray-900/95 dark:bg-gray-800/95 backdrop-blur-sm h-screen p-6 border-r border-gray-700/50 dark:border-gray-600/50">
       {/* Activities Section */}
       <div className="mb-8">
-        <h2 className="text-gray-400 text-sm font-medium mb-4 uppercase tracking-wide">
+        <h2 className="text-gray-400 dark:text-gray-300 text-sm font-medium mb-4 uppercase tracking-wide">
           Activities
         </h2>
         
@@ -25,7 +25,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeFilter === 'recent' 
                 ? 'bg-blue-600 text-white' 
-                : 'text-gray-300 hover:bg-gray-800/50'
+                : 'text-gray-300 dark:text-gray-200 hover:bg-gray-800/50 dark:hover:bg-gray-700/50'
             }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -38,7 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeFilter === 'sports' 
                 ? 'bg-blue-600 text-white' 
-                : 'text-gray-300 hover:bg-gray-800/50'
+                : 'text-gray-300 dark:text-gray-200 hover:bg-gray-800/50 dark:hover:bg-gray-700/50'
             }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -51,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeFilter === 'live' 
                 ? 'bg-blue-600 text-white' 
-                : 'text-gray-300 hover:bg-gray-800/50'
+                : 'text-gray-300 dark:text-gray-200 hover:bg-gray-800/50 dark:hover:bg-gray-700/50'
             }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Following Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-gray-400 text-sm font-medium uppercase tracking-wide">
+          <h2 className="text-gray-400 dark:text-gray-300 text-sm font-medium uppercase tracking-wide">
             Following
           </h2>
           <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
                   isActive
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-800/50'
+                    : 'text-gray-300 dark:text-gray-200 hover:bg-gray-800/50 dark:hover:bg-gray-700/50'
                 }`}
                 aria-pressed={isActive}
                 aria-label={`Filter by ${category}`}

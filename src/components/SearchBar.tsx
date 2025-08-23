@@ -32,7 +32,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full pl-12 pr-6 py-3 rounded-xl bg-gray-800/50 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:bg-gray-800/70 focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 border border-gray-700/50 focus:border-blue-500/50"
+        className="w-full pl-12 pr-6 py-3 rounded-xl bg-gray-800/50 dark:bg-gray-700/50 backdrop-blur-sm text-white dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:bg-gray-800/70 dark:focus:bg-gray-600/70 focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 border border-gray-700/50 dark:border-gray-600/50 focus:border-blue-500/50"
         aria-label="Search news articles"
       />
       

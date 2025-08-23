@@ -55,7 +55,7 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 text-white">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white dark:text-gray-100">
         <div className="flex h-screen">
           <Sidebar
             categories={sportsCategories}
@@ -65,7 +65,7 @@ const App: React.FC = () => {
 
           <main className="flex-1 overflow-y-auto">
             {/* Header */}
-            <header className="flex items-center justify-between p-6 border-b border-gray-700/50">
+            <header className="flex items-center justify-between p-6 border-b border-gray-700/50 dark:border-gray-600/50">
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@ const App: React.FC = () => {
               
               <button
                 onClick={toggleDarkMode}
-                className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors duration-200"
+                className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50 transition-colors duration-200"
                 aria-label="Toggle theme"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ const App: React.FC = () => {
 
             {/* Hero Banner */}
             <div className="p-6">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl p-8 mb-8 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-800 dark:to-blue-700 rounded-2xl p-8 mb-8 relative overflow-hidden">
                 <div className="relative z-10">
                   <h2 className="text-4xl font-bold mb-2">Champions League is here!</h2>
                   <p className="text-blue-100 mb-6">Clips will be waiting for you at saturday!</p>
@@ -122,7 +122,7 @@ const App: React.FC = () => {
               </div>
 
               {/* Tab Navigation */}
-              <div className="flex space-x-1 bg-gray-800/50 rounded-lg p-1">
+              <div className="flex space-x-1 bg-gray-800/50 dark:bg-gray-700/50 rounded-lg p-1">
                 <button
                   onClick={() => setActiveTab('fixtures')}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
