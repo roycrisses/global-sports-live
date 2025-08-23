@@ -30,11 +30,25 @@ const App: React.FC = () => {
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
     setSearchQuery('');
+    
+    // Handle sports category filters by switching to appropriate tab
+    if (newFilter === 'Football') {
+      setActiveTab('fixtures');
+    } else if (newFilter === 'Basketball') {
+      setActiveTab('basketball');
+    } else if (newFilter === 'Tennis') {
+      setActiveTab('tennis');
+    } else if (newFilter === 'Cricket') {
+      setActiveTab('cricket');
+    } else if (newFilter === 'sports' || newFilter === 'recent') {
+      setActiveTab('news');
+    }
   };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setFilter('');
+    setFilter('sports');
+    setActiveTab('news');
   };
 
   const sportsCategories = ['Football', 'Cricket', 'Basketball', 'Tennis'];

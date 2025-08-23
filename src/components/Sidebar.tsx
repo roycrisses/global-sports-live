@@ -22,7 +22,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <nav className="space-y-2">
           <button 
             onClick={() => onFilterChange('recent')}
-            className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-300 hover:bg-gray-800/50 transition-colors">
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeFilter === 'recent' 
+                ? 'bg-blue-600 text-white' 
+                : 'text-gray-300 hover:bg-gray-800/50'
+            }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -30,42 +34,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
           
           <button 
-            onClick={() => onFilterChange('trending')}
-            className="w-full flex items-center space-x-3 p-3 rounded-lg bg-blue-600 text-white transition-colors">
+            onClick={() => onFilterChange('sports')}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeFilter === 'sports' 
+                ? 'bg-blue-600 text-white' 
+                : 'text-gray-300 hover:bg-gray-800/50'
+            }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
-            <span>Trending</span>
+            <span>Sports News</span>
           </button>
           
           <button 
-            onClick={() => onFilterChange('pending')}
-            className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-300 hover:bg-gray-800/50 transition-colors">
+            onClick={() => onFilterChange('live')}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeFilter === 'live' 
+                ? 'bg-blue-600 text-white' 
+                : 'text-gray-300 hover:bg-gray-800/50'
+            }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
-            <span>Pending</span>
-          </button>
-          
-          <button 
-            onClick={() => onFilterChange('uploads')}
-            className="w-full flex items-center justify-between p-3 rounded-lg text-gray-300 hover:bg-gray-800/50 transition-colors">
-            <div className="flex items-center space-x-3">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <span>My Uploads</span>
-            </div>
-            <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">8</span>
-          </button>
-          
-          <button 
-            onClick={() => onFilterChange('connections')}
-            className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-300 hover:bg-gray-800/50 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span>Connections</span>
+            <span>Live Matches</span>
           </button>
         </nav>
       </div>
@@ -83,17 +74,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         
         <nav className="space-y-2">
           {categories.map((category) => {
-            const filterValue = category.toLowerCase().replace(' ', '-');
+            const filterValue = category;
             const isActive = activeFilter === filterValue;
             
-            // Map categories to country flags/icons
+            // Map categories to sport icons
             const getIcon = (cat: string) => {
               switch(cat.toLowerCase()) {
-                case 'football': return '🇮🇹';
-                case 'cricket': return '🇧🇷';
-                case 'basketball': return '🇵🇱';
-                case 'tennis': return '🇩🇪';
-                case 'formula 1': return '🇪🇸';
+                case 'football': return '⚽';
+                case 'cricket': return '🏏';
+                case 'basketball': return '🏀';
+                case 'tennis': return '🎾';
+                case 'formula 1': return '🏎️';
                 default: return '🏆';
               }
             };
@@ -111,13 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 aria-label={`Filter by ${category}`}
               >
                 <span className="text-lg">{getIcon(category)}</span>
-                <span className="text-sm">
-                  {category === 'Formula 1' ? 'La Liga (ESP)' : 
-                   category === 'Cricket' ? 'Brasileiro (BR)' :
-                   category === 'Basketball' ? 'Ekstraklasa (PL)' :
-                   category === 'Tennis' ? 'Bundesliga (GER)' :
-                   `${category} League`}
-                </span>
+                <span className="text-sm">{category}</span>
               </button>
             );
           })}
